@@ -38,7 +38,7 @@ Here's how to find it in the menus:
 
 ## Installation
 
-* Download the `FinishSewing.py` file.
+* Download the [FinishSewing.py](https://raw.githubusercontent.com/billhails/blender-addons/master/src/finish-sewing/FinishSewing.py) file.
 * Open `File > User preferences` in Blender.
 * Choose the `Add-ons` tab.
 * Choose `Install add-on from file...`
