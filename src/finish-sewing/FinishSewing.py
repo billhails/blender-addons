@@ -26,7 +26,7 @@ bl_info = {
     "version": (1, 0),
     "blender": (2, 79, 0),
     "location": "View3D > Mesh > Clean up > Finish Sewing",
-    "description": "Merge sets of vertices connected by edges without faces",
+    "description": "Clean up sewing springs",
     "warning": "",
     "wiki_url": "https://github.com/billhails/blender-addons/blob/master/src/finish-sewing/README.md",
     "category": "Mesh",
