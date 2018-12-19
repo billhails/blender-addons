@@ -15,6 +15,11 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import bpy
+import bmesh
+from mathutils import Vector
+
+
 bl_info = {
     "name": "Finish Sewing",
     "author": "Bill Hails",
@@ -26,45 +31,46 @@ bl_info = {
     "wiki_url": "https://github.com/billhails/blender-addons/blob/master/src/finish-sewing/README.md",
     "category": "Mesh",
     }
-    
-import bpy
-import bmesh
-from mathutils import Vector
 
-class WHFinishSewing(bpy.types.Operator):
-    """Merge sets of vertices connected by edges without faces (e.g. sewing springs)"""
+
+class MESH_OT_finish_sewing(bpy.types.Operator):
     bl_idname = "mesh.finish_sewing"
     bl_label = "Finish Sewing"
     bl_options = {'REGISTER', 'UNDO'}
-    
+
     def execute(self, context):
-        # Get the active mesh
+        """Merge sets of vertices connected by edges without faces"""
+        # Get the active mesh.
         obj = bpy.context.edit_object
         me = obj.data
 
-        # Get a BMesh representation
+        # Get a BMesh representation.
         bm = bmesh.from_edit_mesh(me)
         bm.faces.active = None
 
-        # Find the set of all edges in the mesh
+        # Find the set of all edges in the mesh.
+        #
         # i.e. {A--B, B--C, D--E, E--F, G--H}
         # (where A, B, C etc. are vertices)
         all_edges = set()
         for edge in bm.edges:
             all_edges.add(edge)
 
-        # Find the set of all edges with faces
+        # Find the set of all edges with faces.
+        #
         # i.e. {E--F, G--H}
         faced_edges = set()
         for face in bm.faces:
             for edge in face.edges:
                 faced_edges.add(edge)
 
-        # The set of edges without faces is the difference between those two sets
+        # The set of edges without faces is the difference between those two
+        # sets.
+        #
         # {A--B, B--C, D--E, E--F, G--H} - {E--F, G--H} = {A--B, B--C, D--E}
         unfaced_edges = all_edges - faced_edges
 
-        # Build a set of all of the vertices belonging to those unfaced edges
+        # Build a set of all of the vertices belonging to those unfaced edges.
         #
         # so for example if we have the set of edges:
         # {A--B, B--C, D--E}
@@ -75,7 +81,7 @@ class WHFinishSewing(bpy.types.Operator):
             for vertex in edge.verts:
                 unfaced_edge_vertices.add(vertex)
 
-        # Put each vertex in its own set
+        # Put each vertex in its own set.
         #
         # so if we have the set of vertices:
         # {A, B, C, D, E}
@@ -85,7 +91,7 @@ class WHFinishSewing(bpy.types.Operator):
         for vertex in unfaced_edge_vertices:
             vertex_sets.append({vertex})
 
-        # Merge sets of vertices that share an unfaced edge
+        # Merge sets of vertices that share an unfaced edge.
         #
         # so for example if we have the set of unfaced edges:
         # {A--B, B--C, D--E}
@@ -105,14 +111,19 @@ class WHFinishSewing(bpy.types.Operator):
                 del vertex_sets[index_2]
 
         # Collapse each of those sets of vertices, at centre.
+        #
         # [A, B, C] => A
         # [D, E] => D
         for vertex_set in vertex_sets:
-            bmesh.ops.pointmerge(bm, verts=list(vertex_set), merge_co=self.average_vectors(vertex_set))
-            
+            bmesh.ops.pointmerge(
+                bm,
+                verts=list(vertex_set),
+                merge_co=self.average_vectors(vertex_set)
+            )
+
         # Write the result back to the active mesh
         bmesh.update_edit_mesh(me, True)
-        
+
         # Tell blender everything is ok
         return {'FINISHED'}
 
@@ -125,20 +136,24 @@ class WHFinishSewing(bpy.types.Operator):
             count += 1
         return result / count
 
-def wh_finish_sewing_button(self, context):
+
+def mesh_ot_finish_sewing_button(self, context):
     self.layout.operator(
-        WHFinishSewing.bl_idname,
+        MESH_OT_finish_sewing.bl_idname,
         text="Finish Sewing",
         icon='PLUGIN'
     )
 
+
 def register():
-    bpy.utils.register_class(WHFinishSewing)
-    bpy.types.VIEW3D_MT_edit_mesh_clean.append(wh_finish_sewing_button)
+    bpy.utils.register_class(MESH_OT_finish_sewing)
+    bpy.types.VIEW3D_MT_edit_mesh_clean.append(mesh_ot_finish_sewing_button)
+
 
 def unregister():
-    bpy.utils.unregister_class(WHFinishSewing)
-    bpy.types.VIEW3D_MT_edit_mesh_clean.remove(wh_finish_sewing_button)
+    bpy.utils.unregister_class(MESH_OT_finish_sewing)
+    bpy.types.VIEW3D_MT_edit_mesh_clean.remove(mesh_ot_finish_sewing_button)
+
 
 if __name__ == "__main__":
     register()
