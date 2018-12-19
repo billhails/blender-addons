@@ -23,7 +23,7 @@ bl_info = {
     "location": "View3D > Mesh > Clean up > Finish Sewing",
     "description": "Merge sets of vertices connected by edges without faces",
     "warning": "",
-    "wiki_url": "",
+    "wiki_url": "https://github.com/billhails/blender-addons/blob/master/src/finish-sewing/README.md",
     "category": "Mesh",
     }
     
