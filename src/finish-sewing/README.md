@@ -13,16 +13,12 @@ It applies to the following scenario:
 * You've applied the cloth simulation.
 
 Normally you'd then have to go in to edit mode on the resulting
-mesh and clean up all of those springs, by selecting pairs or sets
-of vertices and doing "merge at center" for every stitch individually.
-This can be very tedious and fiddly for a complex piece of clothing
-with many springs/stitches.
+mesh and clean up all of those springs, by selecting vertices and
+doing "merge at center" for every stitch individually.  This can
+be very tedious and fiddly for a complex piece of clothing with
+many stitching springs.
 
-The FinishSewing add-on does this step for you:
-
-* Tab in to edit mode on your clothing mesh.
-* Select `Mesh > Clean up > Finish Sewing`
-* Tab out of edit mode.
+The FinishSewing add-on does this last step for you.
 
 Here's a screenshot of a mesh before running the add-on:
 
@@ -38,16 +34,32 @@ Here's how to find it in the menus:
 
 ## Installation
 
-* Download the [FinishSewing.py](https://raw.githubusercontent.com/billhails/blender-addons/master/src/finish-sewing/FinishSewing.py) file.
-* Open `File > User preferences` in Blender.
+* Download the current release.
+* unpack the downloaded file.
+* Open `File > User preferences` in Blender 2.79, or `Edit > User Preferences` in 2.80.
 * Choose the `Add-ons` tab.
 * Choose `Install add-on from file...`
-* Browse to the file you just downloaded.
-* Install it.
+* Browse to the directory you just unpacked and go to the `src/finish-sewing` directory in there.
+* Select `FinishSewing279.py` if you're still on blender 2.79, or `FinishSewing.py` if you're on 2.80.
+* Install  it.
 * Check the little tick box to activate it.
+
+## Usage
+
+*  Make sure you are in edit mode on your clothing mesh.
+* Select `Mesh > Clean up > Finish Sewing`
+
+## How it Works
+
+In a bit more detail, it looks through the mesh to find all edges
+that don't have faces. It assumes these are all sewing springs. It
+collects sets of vertices reachable by traversing these edges.
+Typically these sets are just pairs of vertices but it can cope
+with more complex situations.  For each set of vertices, it
+does "merge at center".
 
 ## Testing Notes
 
-I've tested this with 2.79a only, I've no idea if it'll work on 2.8
-yet, though it doesn't use the shrinking vertex group so it should
-be fairly easy to port.
+There are two versions of the script: `FinishSewing279.py` which has been
+tested on Blender 2.79a, and `FinishSewing.py` which was tested on Blender 2.80 beta
+(build `blender-2.80.0-git20181221.7a26e930a8c0-x86_64`).

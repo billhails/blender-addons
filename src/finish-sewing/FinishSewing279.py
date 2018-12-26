@@ -24,7 +24,7 @@ bl_info = {
     "name": "Finish Sewing",
     "author": "Bill Hails",
     "version": (1, 0),
-    "blender": (2, 80, 0),
+    "blender": (2, 79, 0),
     "location": "View3D > Mesh > Clean up > Finish Sewing",
     "description": "Clean up sewing springs",
     "warning": "",
