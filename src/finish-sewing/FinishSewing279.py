@@ -38,11 +38,15 @@ class MESH_OT_finish_sewing(bpy.types.Operator):
     bl_label = "Finish Sewing"
     bl_options = {'REGISTER', 'UNDO'}
 
+    @classmethod
+    def poll(cls, context):
+        return context.edit_object is not None
+
     def execute(self, context):
         """Merge sets of vertices connected by edges without faces"""
+
         # Get the active mesh.
-        obj = bpy.context.edit_object
-        me = obj.data
+        me = context.edit_object.data
 
         # Get a BMesh representation.
         bm = bmesh.from_edit_mesh(me)
@@ -128,7 +132,7 @@ class MESH_OT_finish_sewing(bpy.types.Operator):
         return {'FINISHED'}
 
     def average_vectors(self, vertex_set):
-        """average a set of vectors"""
+        """average vector of a non-empty set of vertices"""
         result = Vector()
         count = 0
         for vertex in vertex_set:
