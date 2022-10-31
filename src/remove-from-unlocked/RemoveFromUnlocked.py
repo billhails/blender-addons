@@ -6,7 +6,7 @@ bl_info = {
     "location": "View3D > Mesh > Clean Up > Remove from Unlocked Groups",
     "description": "Removes selected vertices from all unlocked vertex groups",
     "warning": "",
-    "doc_url": "",
+    "doc_url": "https://github.com/billhails/blender-addons/blob/master/src/remove-from-unlocked/README.md",
     "category": "Mesh",
 }
 
